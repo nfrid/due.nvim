@@ -33,12 +33,21 @@ vim.g.dueVir_overdue_hi = 'Error'
 function M.draw(buf)
   local now = os.time(os.date('*t'))
   for key, value in pairs(vim.api.nvim_buf_get_lines(buf, 0, -1, {})) do
-    local date = string.match(value, '<%d%d%d%d%-%d%d%-%d%d>')
+    local date = string.match(value, '<%d%d%-%d%d>')
+    local fullDate = string.match(value, '<%d%d%d%d%-%d%d%-%d%d>')
+    local due
 
     if date then
-      local year, month, day = date:match('<(%d%d%d%d)%-(%d%d)%-(%d%d)>')
-      local due = os.time({ year = year, month = month, day = day }) - now
+      local month, day = date:match('<(%d%d)%-(%d%d)>')
+      due = os.time({ year = os.date("%Y"), month = month, day = day }) - now
+    end
 
+    if fullDate then
+      local year, month, day = fullDate:match('<(%d%d%d%d)%-(%d%d)%-(%d%d)>')
+      due = os.time({ year = year, month = month, day = day }) - now
+    end
+
+    if due then
       local parsed
       if due > 0 then
         parsed = { parseDue(due), vim.g.dueVir_due_hi }

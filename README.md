@@ -1,6 +1,6 @@
 # dueVir
 
-Simple plugin that provides you due for the <YYYY-MM-DD> string.
+Simple plugin that provides you due for the date string.
 
 ![Example](img/ex.png)
 
