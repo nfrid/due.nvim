@@ -35,6 +35,8 @@ vim.g.dueVir_prescript = 'due: '      -- prescript to due data
 vim.g.dueVir_prescript_hi = 'Comment' -- highlight group of it
 vim.g.dueVir_due_hi = 'String'        -- highlight group of the data itself
 vim.g.dueVir_ft = '*.md'              -- filename to apply aucmds :)
+vim.g.dueVir_overdue = 'OVERDUE'      -- text for overdued data
+vim.g.dueVir_overdue_hi = 'Error'     -- highlight group of overdued
 ```
 
 ## TODO

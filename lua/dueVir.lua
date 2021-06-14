@@ -27,18 +27,29 @@ vim.g.dueVir_prescript = 'due: '
 vim.g.dueVir_prescript_hi = 'Comment'
 vim.g.dueVir_due_hi = 'String'
 vim.g.dueVir_ft = '*.md'
+vim.g.dueVir_overdue = 'OVERDUE'
+vim.g.dueVir_overdue_hi = 'Error'
 
 function M.draw(buf)
   local now = os.time(os.date('*t'))
   for key, value in pairs(vim.api.nvim_buf_get_lines(buf, 0, -1, {})) do
     local date = string.match(value, '<%d%d%d%d%-%d%d%-%d%d>')
+
     if date then
       local year, month, day = date:match('<(%d%d%d%d)%-(%d%d)%-(%d%d)>')
       local due = os.time({ year = year, month = month, day = day }) - now
+
+      local parsed
+      if due > 0 then
+        parsed = { parseDue(due), vim.g.dueVir_due_hi }
+      else
+        parsed = { vim.g.dueVir_overdue, vim.g.dueVir_overdue_hi }
+      end
+
       vim.api.nvim_buf_set_virtual_text(buf, _VT_NS, key - 1, {
         { vim.g.dueVir_prescript, vim.g.dueVir_prescript_hi },
-        { parseDue(due), vim.g.dueVir_due_hi }
-      }, {})
+        parsed
+    }, {})
     end
   end
 end
