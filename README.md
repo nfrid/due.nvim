@@ -1,4 +1,4 @@
-# due_nvim
+# due.nvim
 
 Simple plugin that provides you due for the date string.
 
@@ -15,7 +15,7 @@ I don't think any vim-ish plugin manager can install this lua shit. So it is
 
 ```lua
 use {
-  'NFrid/due_nvim',
+  'NFrid/due.nvim',
   config = function()
     require('due_nvim').setup {}
   end
