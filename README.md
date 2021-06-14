@@ -1,4 +1,4 @@
-# dueVir
+# due.nvim
 
 Simple plugin that provides you due for the date string.
 
@@ -15,9 +15,9 @@ I don't think any vim-ish plugin manager can install this lua shit. So it is
 
 ```lua
 use {
-  'NFrid/dueVir',
+  'NFrid/due.nvim',
   config = function()
-    require('dueVir').setup{}
+    require('due.nvim').setup {}
   end
 }
 ```
@@ -31,12 +31,22 @@ Plugin's settings are all in vim variables. There are all of them, with their
 default values, in lua, of course:
 
 ```lua
-vim.g.dueVir_prescript = 'due: '      -- prescript to due data
-vim.g.dueVir_prescript_hi = 'Comment' -- highlight group of it
-vim.g.dueVir_due_hi = 'String'        -- highlight group of the data itself
-vim.g.dueVir_ft = '*.md'              -- filename to apply aucmds :)
-vim.g.dueVir_overdue = 'OVERDUE'      -- text for overdued data
-vim.g.dueVir_overdue_hi = 'Error'     -- highlight group of overdued
+vim.g.due_nvim_prescript = 'due: '      -- prescript to due data
+vim.g.due_nvim_prescript_hi = 'Comment' -- highlight group of it
+vim.g.due_nvim_due_hi = 'String'        -- highlight group of the data itself
+vim.g.due_nvim_ft = '*.md'              -- filename to apply aucmds :)
+vim.g.due_nvim_overdue = 'OVERDUE'      -- text for overdued data
+vim.g.due_nvim_overdue_hi = 'Error'     -- highlight group of overdued
+```
+
+## Functions
+
+Welp..
+
+```lua
+require("due.nvim").draw(0)   -- Draw it for a buffer (0 to current)
+require("due.nvim").clean(0)  -- Clean the array from it
+require("due.nvim").redraw(0) -- Clean, then draw
 ```
 
 ## TODO

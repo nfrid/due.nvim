@@ -23,12 +23,12 @@ local function parseDue(due)
   return res
 end
 
-vim.g.dueVir_prescript = 'due: '
-vim.g.dueVir_prescript_hi = 'Comment'
-vim.g.dueVir_due_hi = 'String'
-vim.g.dueVir_ft = '*.md'
-vim.g.dueVir_overdue = 'OVERDUE'
-vim.g.dueVir_overdue_hi = 'Error'
+vim.g.due_nvim_prescript = 'due: '
+vim.g.due_nvim_prescript_hi = 'Comment'
+vim.g.due_nvim_due_hi = 'String'
+vim.g.due_nvim_ft = '*.md'
+vim.g.due_nvim_overdue = 'OVERDUE'
+vim.g.due_nvim_overdue_hi = 'Error'
 
 function M.draw(buf)
   local now = os.time(os.date('*t'))
@@ -50,13 +50,13 @@ function M.draw(buf)
     if due then
       local parsed
       if due > 0 then
-        parsed = { parseDue(due), vim.g.dueVir_due_hi }
+        parsed = { parseDue(due), vim.g.due_nvim_due_hi }
       else
-        parsed = { vim.g.dueVir_overdue, vim.g.dueVir_overdue_hi }
+        parsed = { vim.g.due_nvim_overdue, vim.g.due_nvim_overdue_hi }
       end
 
       vim.api.nvim_buf_set_virtual_text(buf, _VT_NS, key - 1, {
-        { vim.g.dueVir_prescript, vim.g.dueVir_prescript_hi },
+        { vim.g.due_nvim_prescript, vim.g.due_nvim_prescript_hi },
         parsed
     }, {})
     end
@@ -73,10 +73,10 @@ function M.redraw(buf)
 end
 
 function M.setup()
-  vim.api.nvim_command('autocmd BufEnter ' .. vim.g.dueVir_ft ..' lua require("dueVir").draw(0)')
-  vim.api.nvim_command('autocmd InsertLeave ' .. vim.g.dueVir_ft ..' lua require("dueVir").redraw(0)')
-  vim.api.nvim_command('autocmd TextChanged ' .. vim.g.dueVir_ft ..' lua require("dueVir").redraw(0)')
-  vim.api.nvim_command('autocmd TextChangedI ' .. vim.g.dueVir_ft ..' lua require("dueVir").redraw(0)')
+  vim.api.nvim_command('autocmd BufEnter ' .. vim.g.due_nvim_ft ..' lua require("due.nvim").draw(0)')
+  vim.api.nvim_command('autocmd InsertLeave ' .. vim.g.due_nvim_ft ..' lua require("due.nvim").redraw(0)')
+  vim.api.nvim_command('autocmd TextChanged ' .. vim.g.due_nvim_ft ..' lua require("due.nvim").redraw(0)')
+  vim.api.nvim_command('autocmd TextChangedI ' .. vim.g.due_nvim_ft ..' lua require("due.nvim").redraw(0)')
 end
 
 return M
