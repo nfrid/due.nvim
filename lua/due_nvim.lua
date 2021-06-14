@@ -73,10 +73,10 @@ function M.redraw(buf)
 end
 
 function M.setup()
-  vim.api.nvim_command('autocmd BufEnter ' .. vim.g.due_nvim_ft ..' lua require("due.nvim").draw(0)')
-  vim.api.nvim_command('autocmd InsertLeave ' .. vim.g.due_nvim_ft ..' lua require("due.nvim").redraw(0)')
-  vim.api.nvim_command('autocmd TextChanged ' .. vim.g.due_nvim_ft ..' lua require("due.nvim").redraw(0)')
-  vim.api.nvim_command('autocmd TextChangedI ' .. vim.g.due_nvim_ft ..' lua require("due.nvim").redraw(0)')
+  vim.api.nvim_command('autocmd BufEnter ' .. vim.g.due_nvim_ft ..' lua require("due_nvim").draw(0)')
+  vim.api.nvim_command('autocmd InsertLeave ' .. vim.g.due_nvim_ft ..' lua require("due_nvim").redraw(0)')
+  vim.api.nvim_command('autocmd TextChanged ' .. vim.g.due_nvim_ft ..' lua require("due_nvim").redraw(0)')
+  vim.api.nvim_command('autocmd TextChangedI ' .. vim.g.due_nvim_ft ..' lua require("due_nvim").redraw(0)')
 end
 
 return M

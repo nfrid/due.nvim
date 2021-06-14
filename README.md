@@ -1,4 +1,4 @@
-# due.nvim
+# due_nvim
 
 Simple plugin that provides you due for the date string.
 
@@ -15,9 +15,9 @@ I don't think any vim-ish plugin manager can install this lua shit. So it is
 
 ```lua
 use {
-  'NFrid/due.nvim',
+  'NFrid/due_nvim',
   config = function()
-    require('due.nvim').setup {}
+    require('due_nvim').setup {}
   end
 }
 ```
@@ -44,9 +44,9 @@ vim.g.due_nvim_overdue_hi = 'Error'     -- highlight group of overdued
 Welp..
 
 ```lua
-require("due.nvim").draw(0)   -- Draw it for a buffer (0 to current)
-require("due.nvim").clean(0)  -- Clean the array from it
-require("due.nvim").redraw(0) -- Clean, then draw
+require("due_nvim").draw(0)   -- Draw it for a buffer (0 to current)
+require("due_nvim").clean(0)  -- Clean the array from it
+require("due_nvim").redraw(0) -- Clean, then draw
 ```
 
 ## TODO
