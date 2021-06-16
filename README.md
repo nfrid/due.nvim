@@ -37,6 +37,7 @@ vim.g.due_nvim_due_hi = 'String'        -- highlight group of the data itself
 vim.g.due_nvim_ft = '*.md'              -- filename to apply aucmds :)
 vim.g.due_nvim_overdue = 'OVERDUE'      -- text for overdued data
 vim.g.due_nvim_overdue_hi = 'Error'     -- highlight group of overdued
+vim.g.due_nvim_date_hi = 'Conceal'      -- highlight group of date string
 ```
 
 ## Functions
@@ -54,7 +55,6 @@ require("due_nvim").redraw(0) -- Clean, then draw
 idk if I ever will develop this thing more... In case of somebody needs it, here
 are my 'plans' on it:
 
-- Pattern as a setting
-- Multiple patterns
+- More patterns / option for pattern style
 - Settings in setup function
 - idk time?????

@@ -29,6 +29,7 @@ vim.g.due_nvim_due_hi = 'String'
 vim.g.due_nvim_ft = '*.md'
 vim.g.due_nvim_overdue = 'OVERDUE'
 vim.g.due_nvim_overdue_hi = 'Error'
+vim.g.due_nvim_date_hi = 'Conceal'
 
 function M.draw(buf)
   local now = os.time(os.date('*t'))
@@ -77,6 +78,9 @@ function M.setup()
   vim.api.nvim_command('autocmd InsertLeave ' .. vim.g.due_nvim_ft ..' lua require("due_nvim").redraw(0)')
   vim.api.nvim_command('autocmd TextChanged ' .. vim.g.due_nvim_ft ..' lua require("due_nvim").redraw(0)')
   vim.api.nvim_command('autocmd TextChangedI ' .. vim.g.due_nvim_ft ..' lua require("due_nvim").redraw(0)')
+
+  vim.api.nvim_command('autocmd BufEnter ' .. vim.g.due_nvim_ft .. ' syn match DueDate /<\\d*-*\\d\\+-\\d\\+>/ display containedin=mkdNonListItemBlock,mkdListItemLine,mkdBlockquote contained')
+  vim.api.nvim_command('autocmd BufEnter ' .. vim.g.due_nvim_ft .. ' hi def link DueDate ' .. vim.g.due_nvim_date_hi)
 end
 
 return M
