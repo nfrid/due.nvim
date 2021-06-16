@@ -32,14 +32,23 @@ vim.g.due_nvim_today_hi = 'Character'
 vim.g.due_nvim_overdue = 'OVERDUE'
 vim.g.due_nvim_overdue_hi = 'Error'
 vim.g.due_nvim_date_hi = 'Conceal'
-vim.g.due_nvim_pattern_start = '<'
-vim.g.due_nvim_pattern_end = '>'
+vim.g.due_nvim_pattern_start = '.'
+vim.g.due_nvim_pattern_end = '&'
 
-local date_pattern =  vim.g.due_nvim_pattern_start .. '%d%d%-%d%d' .. vim.g.due_nvim_pattern_end
-local fulldate_pattern =  vim.g.due_nvim_pattern_start .. '%d%d%d%d%-%d%d%-%d%d' .. vim.g.due_nvim_pattern_end
-local date_pattern_match =  vim.g.due_nvim_pattern_start .. '(%d%d)%-(%d%d)' .. vim.g.due_nvim_pattern_end
-local fulldate_pattern_match =  vim.g.due_nvim_pattern_start .. '(%d%d%d%d)%-(%d%d)%-(%d%d)' .. vim.g.due_nvim_pattern_end
-local regex_hi = '/<\\d*-*\\d\\+-\\d\\+>/'
+local pattern_start = vim.g.due_nvim_pattern_start
+local pattern_end = vim.g.due_nvim_pattern_end
+
+local lua_start = pattern_start:gsub("[%(%)%.%%%+%-%*%?%[%^%$%]]", "%%%1")
+local lua_end = pattern_end:gsub("[%(%)%.%%%+%-%*%?%[%^%$%]]", "%%%1")
+
+local regex_start = pattern_start:gsub("\\%^%$%.%*~%[%]&", "\\%1")
+local regex_end = pattern_end:gsub("\\%^%$%.%*~%[%]&", "\\%1")
+
+local date_pattern = lua_start .. '%d%d%-%d%d' .. lua_end
+local fulldate_pattern = lua_start .. '%d%d%d%d%-%d%d%-%d%d' .. lua_end
+local date_pattern_match = lua_start .. '(%d%d)%-(%d%d)' .. lua_end
+local fulldate_pattern_match = lua_start .. '(%d%d%d%d)%-(%d%d)%-(%d%d)' .. lua_end
+local regex_hi = '/' .. regex_start .. '\\d*-*\\d\\+-\\d\\+' .. regex_end .. '/'
 
 function M.draw(buf)
   local now = os.time(os.date('*t'))
