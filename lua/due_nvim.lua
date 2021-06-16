@@ -32,21 +32,29 @@ vim.g.due_nvim_today_hi = 'Character'
 vim.g.due_nvim_overdue = 'OVERDUE'
 vim.g.due_nvim_overdue_hi = 'Error'
 vim.g.due_nvim_date_hi = 'Conceal'
+vim.g.due_nvim_pattern_start = '<'
+vim.g.due_nvim_pattern_end = '>'
+
+local date_pattern =  vim.g.due_nvim_pattern_start .. '%d%d%-%d%d' .. vim.g.due_nvim_pattern_end
+local fulldate_pattern =  vim.g.due_nvim_pattern_start .. '%d%d%d%d%-%d%d%-%d%d' .. vim.g.due_nvim_pattern_end
+local date_pattern_match =  vim.g.due_nvim_pattern_start .. '(%d%d)%-(%d%d)' .. vim.g.due_nvim_pattern_end
+local fulldate_pattern_match =  vim.g.due_nvim_pattern_start .. '(%d%d%d%d)%-(%d%d)%-(%d%d)' .. vim.g.due_nvim_pattern_end
+local regex_hi = '/<\\d*-*\\d\\+-\\d\\+>/'
 
 function M.draw(buf)
   local now = os.time(os.date('*t'))
   for key, value in pairs(vim.api.nvim_buf_get_lines(buf, 0, -1, {})) do
-    local date = string.match(value, '<%d%d%-%d%d>')
-    local fullDate = string.match(value, '<%d%d%d%d%-%d%d%-%d%d>')
+    local date = string.match(value, date_pattern)
+    local fullDate = string.match(value, fulldate_pattern)
     local due
 
     if date then
-      local month, day = date:match('<(%d%d)%-(%d%d)>')
+      local month, day = date:match(date_pattern_match)
       due = os.time({ year = os.date("%Y"), month = month, day = day }) - now
     end
 
     if fullDate then
-      local year, month, day = fullDate:match('<(%d%d%d%d)%-(%d%d)%-(%d%d)>')
+      local year, month, day = fullDate:match(fulldate_pattern_match)
       due = os.time({ year = year, month = month, day = day }) - now
     end
 
@@ -83,7 +91,7 @@ function M.setup()
   vim.api.nvim_command('autocmd TextChanged ' .. vim.g.due_nvim_ft ..' lua require("due_nvim").redraw(0)')
   vim.api.nvim_command('autocmd TextChangedI ' .. vim.g.due_nvim_ft ..' lua require("due_nvim").redraw(0)')
 
-  vim.api.nvim_command('autocmd BufEnter ' .. vim.g.due_nvim_ft .. ' syn match DueDate /<\\d*-*\\d\\+-\\d\\+>/ display containedin=mkdNonListItemBlock,mkdListItemLine,mkdBlockquote contained')
+  vim.api.nvim_command('autocmd BufEnter ' .. vim.g.due_nvim_ft .. ' syn match DueDate ' .. regex_hi .. ' display containedin=mkdNonListItemBlock,mkdListItemLine,mkdBlockquote contained')
   vim.api.nvim_command('autocmd BufEnter ' .. vim.g.due_nvim_ft .. ' hi def link DueDate ' .. vim.g.due_nvim_date_hi)
 end
 

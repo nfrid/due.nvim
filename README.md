@@ -40,6 +40,8 @@ vim.g.due_nvim_today_hi = 'Character'   -- highlight group of today's due
 vim.g.due_nvim_overdue = 'OVERDUE'      -- text for overdued data
 vim.g.due_nvim_overdue_hi = 'Error'     -- highlight group of overdued
 vim.g.due_nvim_date_hi = 'Conceal'      -- highlight group of date string
+vim.g.due_nvim_pattern_start = '<'      -- start for a date string pattern
+vim.g.due_nvim_pattern_end = '>'        -- end for a date string pattern
 ```
 
 ## Functions
@@ -57,6 +59,6 @@ require("due_nvim").redraw(0) -- Clean, then draw
 idk if I ever will develop this thing more... In case of somebody needs it, here
 are my 'plans' on it:
 
-- More patterns / option for pattern style
+- Option for pattern style
 - Settings in setup function
 - idk time?????
