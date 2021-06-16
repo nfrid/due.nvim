@@ -32,8 +32,8 @@ vim.g.due_nvim_today_hi = 'Character'
 vim.g.due_nvim_overdue = 'OVERDUE'
 vim.g.due_nvim_overdue_hi = 'Error'
 vim.g.due_nvim_date_hi = 'Conceal'
-vim.g.due_nvim_pattern_start = '.'
-vim.g.due_nvim_pattern_end = '&'
+vim.g.due_nvim_pattern_start = '<'
+vim.g.due_nvim_pattern_end = '>'
 
 local pattern_start = vim.g.due_nvim_pattern_start
 local pattern_end = vim.g.due_nvim_pattern_end
