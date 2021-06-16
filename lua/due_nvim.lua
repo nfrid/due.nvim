@@ -19,7 +19,7 @@ local function parseDue(due)
     res = res .. math.floor(due / week) .. 'w '
     due = due % week
   end
-  if due >= day then res = res .. math.floor(due / day) .. 'd ' end
+  res = res .. math.floor(due / day) + 1 .. 'd '
   return res
 end
 
@@ -27,6 +27,8 @@ vim.g.due_nvim_prescript = 'due: '
 vim.g.due_nvim_prescript_hi = 'Comment'
 vim.g.due_nvim_due_hi = 'String'
 vim.g.due_nvim_ft = '*.md'
+vim.g.due_nvim_today = 'TODAY'
+vim.g.due_nvim_today_hi = 'Character'
 vim.g.due_nvim_overdue = 'OVERDUE'
 vim.g.due_nvim_overdue_hi = 'Error'
 vim.g.due_nvim_date_hi = 'Conceal'
@@ -52,6 +54,8 @@ function M.draw(buf)
       local parsed
       if due > 0 then
         parsed = { parseDue(due), vim.g.due_nvim_due_hi }
+      elseif due > -86400 then
+        parsed = { vim.g.due_nvim_today, vim.g.due_nvim_today_hi }
       else
         parsed = { vim.g.due_nvim_overdue, vim.g.due_nvim_overdue_hi }
       end
