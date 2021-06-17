@@ -25,7 +25,7 @@ use {
 
 ## Settings
 
-Parse any of these settings to setup func to overwrite the defaults:
+Pass any of these settings to setup func to overwrite the defaults:
 
 ```lua
 require('due_nvim').setup {
