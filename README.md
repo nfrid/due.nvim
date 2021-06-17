@@ -6,12 +6,13 @@ Simple plugin that provides you due for the date string.
 
 ## Requirements
 
-- Neovim Nightly (0.5) (may work with 0.4.4 idk test it and message me lol)
+- Neovim Nightly (0.5)
+
+TODO: test for 0.4
 
 ## Installation
 
-I don't think any vim-ish plugin manager can install this lua shit. So it is
-[packer.nvim](https://github.com/wbthomason/packer.nvim) and similarities only...
+Using [packer.nvim](https://github.com/wbthomason/packer.nvim)
 
 ```lua
 use {
@@ -22,31 +23,29 @@ use {
 }
 ```
 
-Or you may implement your own 'setup' due to mine just being couple of aucmds
-with plugin's functions (listed below).
+## Settings
 
-## Variables
-
-Plugin's settings are all in vim variables. There are all of them, with their
-default values, in lua, of course:
+Parse any of these settings to setup func to overwrite the defaults:
 
 ```lua
-vim.g.due_nvim_prescript = 'due: '      -- prescript to due data
-vim.g.due_nvim_prescript_hi = 'Comment' -- highlight group of it
-vim.g.due_nvim_due_hi = 'String'        -- highlight group of the data itself
-vim.g.due_nvim_ft = '*.md'              -- filename to apply aucmds :)
-vim.g.due_nvim_today = 'TODAY'          -- text for today's due data
-vim.g.due_nvim_today_hi = 'Character'   -- highlight group of today's due
-vim.g.due_nvim_overdue = 'OVERDUE'      -- text for overdued data
-vim.g.due_nvim_overdue_hi = 'Error'     -- highlight group of overdued
-vim.g.due_nvim_date_hi = 'Conceal'      -- highlight group of date string
-vim.g.due_nvim_pattern_start = '<'      -- start for a date string pattern
-vim.g.due_nvim_pattern_end = '>'        -- end for a date string pattern
+require('due_nvim').setup {
+  prescript = 'due: '      -- prescript to due data
+  prescript_hi = 'Comment' -- highlight group of it
+  due_hi = 'String'        -- highlight group of the data itself
+  ft = '*.md'              -- filename template to apply aucmds :)
+  today = 'TODAY'          -- text for today's due
+  today_hi = 'Character'   -- highlight group of today's due
+  overdue = 'OVERDUE'      -- text for overdued
+  overdue_hi = 'Error'     -- highlight group of overdued
+  date_hi = 'Conceal'      -- highlight group of date string
+  pattern_start = '<'      -- start for a date string pattern
+  pattern_end = '>'        -- end for a date string pattern
+}
 ```
 
 ## Functions
 
-Welp..
+These are used to make it work..
 
 ```lua
 require("due_nvim").draw(0)   -- Draw it for a buffer (0 to current)
@@ -60,5 +59,4 @@ idk if I ever will develop this thing more... In case of somebody needs it, here
 are my 'plans' on it:
 
 - Option for pattern style
-- Settings in setup function
 - idk time?????

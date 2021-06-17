@@ -23,32 +23,57 @@ local function parseDue(due)
   return res
 end
 
-vim.g.due_nvim_prescript = 'due: '
-vim.g.due_nvim_prescript_hi = 'Comment'
-vim.g.due_nvim_due_hi = 'String'
-vim.g.due_nvim_ft = '*.md'
-vim.g.due_nvim_today = 'TODAY'
-vim.g.due_nvim_today_hi = 'Character'
-vim.g.due_nvim_overdue = 'OVERDUE'
-vim.g.due_nvim_overdue_hi = 'Error'
-vim.g.due_nvim_date_hi = 'Conceal'
-vim.g.due_nvim_pattern_start = '<'
-vim.g.due_nvim_pattern_end = '>'
+local prescript
+local prescript_hi
+local due_hi
+local ft
+local today
+local today_hi
+local overdue
+local overdue_hi
+local date_hi
+local pattern_start
+local pattern_end
 
-local pattern_start = vim.g.due_nvim_pattern_start
-local pattern_end = vim.g.due_nvim_pattern_end
+local date_pattern
+local fulldate_pattern
+local date_pattern_match
+local fulldate_pattern_match
 
-local lua_start = pattern_start:gsub("[%(%)%.%%%+%-%*%?%[%^%$%]]", "%%%1")
-local lua_end = pattern_end:gsub("[%(%)%.%%%+%-%*%?%[%^%$%]]", "%%%1")
+function M.setup(c)
+  prescript = c.prescript and c.prescript or 'due: '
+  prescript_hi = c.prescript_hi and c.prescript_hi or 'Comment'
+  due_hi = c.due_hi and c.due_hi or 'String'
+  ft = c.ft and c.ft or '*.md'
+  today = c.today and c.today or 'TODAY'
+  today_hi = c.today_hi and c.today_hi or 'Character'
+  overdue = c.overdue and c.overdue or 'OVERDUE'
+  overdue_hi = c.overdue_hi and c.overdue_hi or 'Error'
+  date_hi = c.date_hi and c.date_hi or 'Conceal'
+  pattern_start = c.pattern_start and c.pattern_start or '<'
+  pattern_end = c.pattern_end and c.pattern_end or '>'
 
-local regex_start = pattern_start:gsub("\\%^%$%.%*~%[%]&", "\\%1")
-local regex_end = pattern_end:gsub("\\%^%$%.%*~%[%]&", "\\%1")
+  local lua_start = pattern_start:gsub("[%(%)%.%%%+%-%*%?%[%^%$%]]", "%%%1")
+  local lua_end = pattern_end:gsub("[%(%)%.%%%+%-%*%?%[%^%$%]]", "%%%1")
 
-local date_pattern = lua_start .. '%d%d%-%d%d' .. lua_end
-local fulldate_pattern = lua_start .. '%d%d%d%d%-%d%d%-%d%d' .. lua_end
-local date_pattern_match = lua_start .. '(%d%d)%-(%d%d)' .. lua_end
-local fulldate_pattern_match = lua_start .. '(%d%d%d%d)%-(%d%d)%-(%d%d)' .. lua_end
-local regex_hi = '/' .. regex_start .. '\\d*-*\\d\\+-\\d\\+' .. regex_end .. '/'
+  local regex_start = pattern_start:gsub("\\%^%$%.%*~%[%]&", "\\%1")
+  local regex_end = pattern_end:gsub("\\%^%$%.%*~%[%]&", "\\%1")
+
+  date_pattern = lua_start .. '%d%d%-%d%d' .. lua_end
+  fulldate_pattern = lua_start .. '%d%d%d%d%-%d%d%-%d%d' .. lua_end
+  date_pattern_match = lua_start .. '(%d%d)%-(%d%d)' .. lua_end
+  fulldate_pattern_match = lua_start .. '(%d%d%d%d)%-(%d%d)%-(%d%d)' .. lua_end
+
+  local regex_hi = '/' .. regex_start .. '\\d*-*\\d\\+-\\d\\+' .. regex_end .. '/'
+
+  vim.api.nvim_command('autocmd BufEnter ' .. ft ..' lua require("due_nvim").draw(0)')
+  vim.api.nvim_command('autocmd InsertLeave ' .. ft ..' lua require("due_nvim").redraw(0)')
+  vim.api.nvim_command('autocmd TextChanged ' .. ft ..' lua require("due_nvim").redraw(0)')
+  vim.api.nvim_command('autocmd TextChangedI ' .. ft ..' lua require("due_nvim").redraw(0)')
+
+  vim.api.nvim_command('autocmd BufEnter ' .. ft .. ' syn match DueDate ' .. regex_hi .. ' display containedin=mkdNonListItemBlock,mkdListItemLine,mkdBlockquote contained')
+  vim.api.nvim_command('autocmd BufEnter ' .. ft .. ' hi def link DueDate ' .. date_hi)
+end
 
 function M.draw(buf)
   local now = os.time(os.date('*t'))
@@ -70,15 +95,15 @@ function M.draw(buf)
     if due then
       local parsed
       if due > 0 then
-        parsed = { parseDue(due), vim.g.due_nvim_due_hi }
+        parsed = { parseDue(due), due_hi }
       elseif due > -86400 then
-        parsed = { vim.g.due_nvim_today, vim.g.due_nvim_today_hi }
+        parsed = { today, today_hi }
       else
-        parsed = { vim.g.due_nvim_overdue, vim.g.due_nvim_overdue_hi }
+        parsed = { overdue, overdue_hi }
       end
 
       vim.api.nvim_buf_set_virtual_text(buf, _VT_NS, key - 1, {
-        { vim.g.due_nvim_prescript, vim.g.due_nvim_prescript_hi },
+        { prescript, prescript_hi },
         parsed
     }, {})
     end
@@ -92,16 +117,6 @@ end
 function M.redraw(buf)
   M.clear(buf)
   M.draw(buf)
-end
-
-function M.setup()
-  vim.api.nvim_command('autocmd BufEnter ' .. vim.g.due_nvim_ft ..' lua require("due_nvim").draw(0)')
-  vim.api.nvim_command('autocmd InsertLeave ' .. vim.g.due_nvim_ft ..' lua require("due_nvim").redraw(0)')
-  vim.api.nvim_command('autocmd TextChanged ' .. vim.g.due_nvim_ft ..' lua require("due_nvim").redraw(0)')
-  vim.api.nvim_command('autocmd TextChangedI ' .. vim.g.due_nvim_ft ..' lua require("due_nvim").redraw(0)')
-
-  vim.api.nvim_command('autocmd BufEnter ' .. vim.g.due_nvim_ft .. ' syn match DueDate ' .. regex_hi .. ' display containedin=mkdNonListItemBlock,mkdListItemLine,mkdBlockquote contained')
-  vim.api.nvim_command('autocmd BufEnter ' .. vim.g.due_nvim_ft .. ' hi def link DueDate ' .. vim.g.due_nvim_date_hi)
 end
 
 return M
