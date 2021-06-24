@@ -21,7 +21,7 @@ use {
 }
 ```
 
-You may use another plugin managers, [Plug](https://github.com/junegunn/vim-plug)
+You may use another plugin manager, [Plug](https://github.com/junegunn/vim-plug)
 for example. In that case you will still need to initialize it with lua:
 
 ```vim
