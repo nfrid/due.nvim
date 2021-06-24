@@ -6,9 +6,7 @@ Simple plugin that provides you due for the date string.
 
 ## Requirements
 
-- Neovim Nightly (0.5)
-
-TODO: test for 0.4
+- Neovim 0.4.4+
 
 ## Installation
 
@@ -21,6 +19,15 @@ use {
     require('due_nvim').setup {}
   end
 }
+```
+
+You may use another plugin managers, [Plug](https://github.com/junegunn/vim-plug)
+for example. In that case you will still need to initialize it with lua:
+
+```vim
+lua << EOF
+require('due_nvim').setup {}
+EOF
 ```
 
 ## Settings
