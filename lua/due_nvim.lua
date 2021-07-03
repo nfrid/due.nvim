@@ -41,17 +41,17 @@ local date_pattern_match
 local fulldate_pattern_match
 
 function M.setup(c)
-  prescript = c.prescript and c.prescript or 'due: '
-  prescript_hi = c.prescript_hi and c.prescript_hi or 'Comment'
-  due_hi = c.due_hi and c.due_hi or 'String'
-  ft = c.ft and c.ft or '*.md'
-  today = c.today and c.today or 'TODAY'
-  today_hi = c.today_hi and c.today_hi or 'Character'
-  overdue = c.overdue and c.overdue or 'OVERDUE'
-  overdue_hi = c.overdue_hi and c.overdue_hi or 'Error'
-  date_hi = c.date_hi and c.date_hi or 'Conceal'
-  pattern_start = c.pattern_start and c.pattern_start or '<'
-  pattern_end = c.pattern_end and c.pattern_end or '>'
+  prescript = c.prescript or 'due: '
+  prescript_hi = c.prescript_hi or 'Comment'
+  due_hi = c.due_hi or 'String'
+  ft = c.ft or '*.md'
+  today = c.today or 'TODAY'
+  today_hi = c.today_hi or 'Character'
+  overdue = c.overdue or 'OVERDUE'
+  overdue_hi = c.overdue_hi or 'Error'
+  date_hi = c.date_hi or 'Conceal'
+  pattern_start = c.pattern_start or '<'
+  pattern_end = c.pattern_end or '>'
 
   local lua_start = pattern_start:gsub("[%(%)%.%%%+%-%*%?%[%^%$%]]", "%%%1")
   local lua_end = pattern_end:gsub("[%(%)%.%%%+%-%*%?%[%^%$%]]", "%%%1")
