@@ -17,7 +17,7 @@ local function parseDue(due)
   end
 
   if due >= month then
-    res = res .. math.floor(due / month) .. 'mo '
+    res = res .. math.floor(due / month) .. 'm '
     due = due % month
   end
 
@@ -38,7 +38,7 @@ local function parseDue(due)
     end 
 
     if due >= minute then
-      res = res .. math.floor(due / minute) .. 'mi '
+      res = res .. math.floor(due / minute) .. 'min '
       due = due % minute
     end  
 
@@ -71,7 +71,7 @@ local fulldate_pattern_match
 
 
 function M.setup(c)
-  use_clock_time = c.use_clock_time or false
+  use_clock_time = c.use_clock_time or true
   default_due_time = c.default_due_time or 'midnight'
   prescript = c.prescript or 'due: '
   prescript_hi = c.prescript_hi or 'Comment'
@@ -92,7 +92,6 @@ function M.setup(c)
   local regex_end = pattern_end:gsub("\\%^%$%.%*~%[%]&", "\\%1")
 
   date_pattern = lua_start .. '%d%d%-%d%d' .. lua_end
-  datetime_pattern = lua_start .. '%d%d%-%d%d-%d%d%:%d%d%:%d%d' .. lua_end
   fulldate_pattern = lua_start .. '%d%d%d%d%-%d%d%-%d%d' .. lua_end
 
   date_pattern_match = lua_start .. '(%d%d)%-(%d%d)' .. lua_end
@@ -158,7 +157,7 @@ function M.draw(buf)
 
       if due > 0 then
         parsed = { parseDue(due), due_hi }
-      elseif use_clock_time == false and due > -86400 then
+      elseif not use_clock_time and due > -86400 then
         parsed = { today, today_hi }
       else
         parsed = { overdue, overdue_hi }
@@ -181,4 +180,4 @@ function M.redraw(buf)
   M.draw(buf)
 end
 
-return M 
+return M
