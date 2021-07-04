@@ -177,9 +177,11 @@ function M.draw(buf)
       local parsed
 
       if due > 0 then
-        parsed = { parseDue(due), due_hi }
-      elseif not use_clock_time and due > -86400 then
-        parsed = { today, today_hi }
+        if not use_clock_time and due < 86400 then
+          parsed = { today, today_hi }
+        else
+          parsed = { parseDue(due), due_hi }
+        end
       else
         parsed = { overdue, overdue_hi }
       end
