@@ -28,6 +28,8 @@ local fulldate_pattern
 local fulldatetime_pattern
 local fulldatetime12_pattern
 
+local regex_hi
+
 local update_rate
 
 local function patternify(str)
@@ -95,7 +97,8 @@ end
 function M.setup(c)
   use_clock_time = c.use_clock_time or false
   use_seconds = c.use_clock_time or false
-  update_rate = c.update_rate or (use_clock_time and (use_seconds and 1000 or 60000) or 0)
+  update_rate = c.update_rate or
+                    (use_clock_time and (use_seconds and 1000 or 60000) or 0)
   default_due_time = c.default_due_time or 'midnight'
   prescript = c.prescript or 'due: '
   prescript_hi = c.prescript_hi or 'Comment'
@@ -116,6 +119,8 @@ function M.setup(c)
                              ('(%d%d%d%d)%-' .. datetime_pattern)
   fulldatetime12_pattern = c.fulldatetime12_pattern or
                                (fulldatetime_pattern .. ' (%a%a)')
+  regex_hi = c.regex_hi or
+                 "\\d*-*\\d\\+-\\d\\+\\( \\d*:\\d*\\( \\a\\a\\)\\?\\)\\?"
 
   if default_due_time == "midnight" then
     user_hour = 23
@@ -130,8 +135,7 @@ function M.setup(c)
   local regex_start = regexify(pattern_start)
   local regex_end = regexify(pattern_end)
 
-  local regex_hi_str = "\\d*-*\\d\\+-\\d\\+\\( \\d*:\\d*\\( \\a\\a\\)\\?\\)\\?"
-  local regex_hi = '/' .. regex_start .. regex_hi_str .. regex_end .. '/'
+  local regex_hi_full = '/' .. regex_start .. regex_hi .. regex_end .. '/'
 
   vim.api.nvim_command('autocmd BufEnter ' .. ft ..
                            ' lua require("due_nvim").draw(0)')
@@ -145,7 +149,7 @@ function M.setup(c)
                            ' lua require("due_nvim").redraw(0)')
 
   vim.api.nvim_command('autocmd BufEnter ' .. ft .. ' syn match DueDate ' ..
-                           regex_hi ..
+                           regex_hi_full ..
                            ' display containedin=mkdNonListItemBlock,mkdListItemLine,mkdBlockquote contained')
   vim.api.nvim_command('autocmd BufEnter ' .. ft .. ' hi def link DueDate ' ..
                            date_hi)
