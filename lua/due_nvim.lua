@@ -14,6 +14,7 @@ local pattern_start
 local pattern_end
 
 local use_clock_time
+local use_clock_today
 local use_seconds
 local default_due_time
 
@@ -53,6 +54,7 @@ local function parseDue(due)
   local hour = 3600
   local minute = 60
   local res = ''
+  local is_today = due < day
 
   if due >= year then
     res = res .. math.floor(due / year) .. 'y '
@@ -69,7 +71,7 @@ local function parseDue(due)
     due = due % week
   end
 
-  if use_clock_time then
+  if use_clock_time or (is_today and use_clock_today) then
     if due >= day then
       res = res .. math.floor(due / day) .. 'd '
       due = due % day
@@ -96,6 +98,7 @@ end
 
 function M.setup(c)
   use_clock_time = c.use_clock_time or false
+  use_clock_today = c.use_clock_time or false
   use_seconds = c.use_clock_time or false
   update_rate = c.update_rate or
                     (use_clock_time and (use_seconds and 1000 or 60000) or 0)
@@ -159,7 +162,7 @@ local function draw_due(due, buf, key)
   local parsed
 
   if due > 0 then
-    if not use_clock_time and due < 86400 then
+    if not (use_clock_time or use_clock_today) and due < 86400 then
       parsed = { today, today_hi }
     else
       parsed = { parseDue(due), due_hi }

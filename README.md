@@ -70,6 +70,7 @@ require('due_nvim').setup {
                                      -- milliseconds. 0 or less disables it
 
   use_clock_time = false,         -- display also hours and minutes
+  use_clock_today = false,        -- do it instead of TODAY
   use_seconds = false,            -- if use_clock_time == true, display seconds
                                      -- as well
   default_due_time = "midnight"   -- if use_clock_time == true, calculate time
