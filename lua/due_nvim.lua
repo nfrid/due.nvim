@@ -185,8 +185,10 @@ function M.draw(buf)
     if fulldatetime12 then
       local year, month, day, hour, min, period =
           fulldatetime12:match(make_pattern_match(fulldatetime12_pattern))
-      if period:lower() == 'pm' and tonumber(hour) <= 12 then
-        hour = tonumber(hour) + 12
+      hour = tonumber(hour)
+      local is_pm = period:lower() == 'pm'
+      if is_pm and hour < 12 or not is_pm and hour == 12 then
+        hour = hour + 12
       end
       draw_due(os.time({
         year = year,
@@ -234,8 +236,10 @@ function M.draw(buf)
       local month, day, hour, min, period =
           datetime12:match(make_pattern_match(datetime12_pattern))
       local year = os.date("%Y")
-      if period:lower() == 'pm' and tonumber(hour) <= 12 then
-        hour = tonumber(hour) + 12
+      hour = tonumber(hour)
+      local is_pm = period:lower() == 'pm'
+      if is_pm and hour < 12 or not is_pm and hour == 12 then
+        hour = hour + 12
       end
       draw_due(os.time({
         year = year,
