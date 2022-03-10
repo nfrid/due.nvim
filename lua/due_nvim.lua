@@ -188,7 +188,10 @@ function M.draw(buf)
       hour = tonumber(hour)
       local is_pm = period:lower() == 'pm'
       if is_pm and hour < 12 or not is_pm and hour == 12 then
-        hour = (hour + 12) % 12
+        hour = hour + 12
+        if hour == 24 then
+          hour = 0
+        end
       end
       draw_due(os.time({
         year = year,
@@ -239,7 +242,10 @@ function M.draw(buf)
       hour = tonumber(hour)
       local is_pm = period:lower() == 'pm'
       if is_pm and hour < 12 or not is_pm and hour == 12 then
-        hour = (hour + 12) % 12
+        hour = hour + 12
+        if hour == 24 then
+          hour = 0
+        end
       end
       draw_due(os.time({
         year = year,
