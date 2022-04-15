@@ -140,22 +140,21 @@ function M.setup(c)
 
   local regex_hi_full = '/' .. regex_start .. regex_hi .. regex_end .. '/'
 
-  vim.api.nvim_command('autocmd BufEnter ' .. ft ..
-                           ' lua require("due_nvim").draw(0)')
-  vim.api.nvim_command('autocmd BufEnter ' .. ft ..
-                           ' lua require("due_nvim").async_update(0)')
-  vim.api.nvim_command('autocmd InsertLeave ' .. ft ..
-                           ' lua require("due_nvim").redraw(0)')
-  vim.api.nvim_command('autocmd TextChanged ' .. ft ..
-                           ' lua require("due_nvim").redraw(0)')
-  vim.api.nvim_command('autocmd TextChangedI ' .. ft ..
-                           ' lua require("due_nvim").redraw(0)')
-
-  vim.api.nvim_command('autocmd BufEnter ' .. ft .. ' syn match DueDate ' ..
-                           regex_hi_full ..
-                           ' display containedin=mkdNonListItemBlock,mkdListItemLine,mkdBlockquote contained')
-  vim.api.nvim_command('autocmd BufEnter ' .. ft .. ' hi def link DueDate ' ..
-                           date_hi)
+  vim.api.nvim_exec(string.format(
+    [[
+  augroup Due
+    autocmd!
+    autocmd BufEnter %s lua require("due_nvim").draw(0)
+    autocmd BufEnter %s lua require("due_nvim").async_update(0)
+    autocmd InsertLeave %s lua require("due_nvim").redraw(0)
+    autocmd TextChanged %s lua require("due_nvim").redraw(0)
+    autocmd TextChangedI %s lua require("due_nvim").redraw(0)
+    autocmd BufEnter %s syn match DueDate %s display containedin=mkdNonListItemBlock,mkdListItemLine,mkdBlockquote contained
+    autocmd BufEnter %s hi def link DueDate %s
+  augroup END
+  ]], ft, ft, ft, ft, ft, ft, regex_hi_full, ft, date_hi),
+    false
+  )
 end
 
 local function draw_due(due, buf, key)
