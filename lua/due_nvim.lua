@@ -36,12 +36,14 @@ local update_rate
 local function patternify(str)
   return str:gsub("[%(%)%.%%%+%-%*%?%[%^%$%]]", "%%%1")
 end
+
 local function regexify(str) return str:gsub("\\%^%$%.%*~%[%]&", "\\%1") end
 
 local function make_pattern(pattern)
   return patternify(pattern_start) .. pattern:gsub('%(', ''):gsub('%)', '') ..
-             patternify(pattern_end)
+      patternify(pattern_end)
 end
+
 local function make_pattern_match(pattern)
   return patternify(pattern_start) .. pattern .. patternify(pattern_end)
 end
@@ -97,11 +99,17 @@ local function parseDue(due)
 end
 
 function M.setup(c)
+  c = c or {}
+  c = { use_clock_time = true }
   use_clock_time = c.use_clock_time or false
   use_clock_today = c.use_clock_time or false
-  use_seconds = c.use_clock_time or false
+  if type(c.use_seconds) == 'boolean' then
+    use_seconds = c.use_seconds
+  else
+    use_seconds = c.use_clock_time or false
+  end
   update_rate = c.update_rate or
-                    (use_clock_time and (use_seconds and 1000 or 60000) or 0)
+      (use_clock_time and (use_seconds and 1000 or 60000) or 0)
   default_due_time = c.default_due_time or 'midnight'
   prescript = c.prescript or 'due: '
   prescript_hi = c.prescript_hi or 'Comment'
@@ -119,11 +127,11 @@ function M.setup(c)
   datetime12_pattern = c.datetime12_pattern or (datetime_pattern .. ' (%a%a)')
   fulldate_pattern = c.fulldate_pattern or ('(%d%d%d%d)%-' .. date_pattern)
   fulldatetime_pattern = c.fulldatetime_pattern or
-                             ('(%d%d%d%d)%-' .. datetime_pattern)
+      ('(%d%d%d%d)%-' .. datetime_pattern)
   fulldatetime12_pattern = c.fulldatetime12_pattern or
-                               (fulldatetime_pattern .. ' (%a%a)')
+      (fulldatetime_pattern .. ' (%a%a)')
   regex_hi = c.regex_hi or
-                 "\\d*-*\\d\\+-\\d\\+\\( \\d*:\\d*\\( \\a\\a\\)\\?\\)\\?"
+      "\\d*-*\\d\\+-\\d\\+\\( \\d*:\\d*\\( \\a\\a\\)\\?\\)\\?"
 
   if default_due_time == "midnight" then
     user_hour = 23
@@ -152,7 +160,7 @@ function M.setup(c)
     autocmd BufEnter %s syn match DueDate %s display containedin=mkdNonListItemBlock,mkdListItemLine,mkdBlockquote contained
     autocmd BufEnter %s hi def link DueDate %s
   augroup END
-  ]], ft, ft, ft, ft, ft, ft, regex_hi_full, ft, date_hi),
+  ]] , ft, ft, ft, ft, ft, ft, regex_hi_full, ft, date_hi),
     false
   )
 end
@@ -171,7 +179,7 @@ local function draw_due(due, buf, key)
   end
 
   vim.api.nvim_buf_set_virtual_text(buf, _VT_NS, key - 1,
-                                    { { prescript, prescript_hi }, parsed }, {})
+    { { prescript, prescript_hi }, parsed }, {})
 end
 
 function M.draw(buf)
@@ -183,7 +191,7 @@ function M.draw(buf)
     local fulldatetime12 = value:match(make_pattern(fulldatetime12_pattern))
     if fulldatetime12 then
       local year, month, day, hour, min, period =
-          fulldatetime12:match(make_pattern_match(fulldatetime12_pattern))
+      fulldatetime12:match(make_pattern_match(fulldatetime12_pattern))
       hour = tonumber(hour)
       local is_pm = period:lower() == 'pm'
       if is_pm and hour < 12 or not is_pm and hour == 12 then
@@ -206,7 +214,7 @@ function M.draw(buf)
     local fulldatetime = value:match(make_pattern(fulldatetime_pattern))
     if fulldatetime then
       local year, month, day, hour, min =
-          fulldatetime:match(make_pattern_match(fulldatetime_pattern))
+      fulldatetime:match(make_pattern_match(fulldatetime_pattern))
       draw_due(os.time({
         year = year,
         month = month,
@@ -221,7 +229,7 @@ function M.draw(buf)
     local fulldate = value:match(make_pattern(fulldate_pattern))
     if fulldate then
       local year, month, day = fulldate:match(make_pattern_match(
-                                                  fulldate_pattern))
+        fulldate_pattern))
       draw_due(os.time({
         year = year,
         month = month,
@@ -236,7 +244,7 @@ function M.draw(buf)
     local datetime12 = value:match(make_pattern(datetime12_pattern))
     if datetime12 then
       local month, day, hour, min, period =
-          datetime12:match(make_pattern_match(datetime12_pattern))
+      datetime12:match(make_pattern_match(datetime12_pattern))
       local year = os.date("%Y")
       hour = tonumber(hour)
       local is_pm = period:lower() == 'pm'
@@ -260,7 +268,7 @@ function M.draw(buf)
     local datetime = value:match(make_pattern(datetime_pattern))
     if datetime then
       local month, day, hour, min = datetime:match(make_pattern_match(
-                                                       datetime_pattern))
+        datetime_pattern))
       local year = os.date("%Y")
       draw_due(os.time({
         year = year,
