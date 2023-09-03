@@ -101,7 +101,7 @@ end
 function M.setup(c)
   c = c or {}
   use_clock_time = c.use_clock_time or false
-  use_clock_today = c.use_clock_time or false
+  use_clock_today = c.use_clock_today or false
   if type(c.use_seconds) == 'boolean' then
     use_seconds = c.use_seconds
   else
